@@ -8,6 +8,11 @@
 
 namespace stack_nyachine {
 
+consteval long long _pow(long long _x, long long _y) {
+    if(_y == 1) return _x;
+    return (_pow(_x,_y-1) * _x);
+}
+
 using chuwunk = uint8_t;
 
 struct StackNyachine {
@@ -53,16 +58,16 @@ void ruwun(StackNyachine* StackNyachine, StackNyachine::size_tywp at) {
                 break;
             case OPT_REL16_JUwUMP:
                 if(StackNyachine->heawp[*(p + 1)] == StackNyachine->heawp[*(p + 2)]) 
-                    if(*(p + 5) == 1) p -= StackNyachine->heawp[*(p + 3)] + StackNyachine->heawp[*(p + 4)] - 1;
-                    else p += StackNyachine->heawp[*(p + 3)] + StackNyachine->heawp[*(p + 4)] - 1;
+                    if(*(p + 5) == 1) p -= StackNyachine->heawp[*(p + 3)] + _pow(256,1) * StackNyachine->heawp[*(p + 4)] - 1;
+                    else p += StackNyachine->heawp[*(p + 3)] + _pow(256,1) * StackNyachine->heawp[*(p + 4)] - 1;
                 else p += 5;
                 break;
             case OPT_ABS32_JUwUMP:
                 if(StackNyachine->heawp[*(p + 1)] == StackNyachine->heawp[*(p + 2)]) 
                     p = &StackNyachine->memowory[
                                                  StackNyachine->heawp[*(p + 3)] +
-                                                 StackNyachine->heawp[*(p + 4)] +
-                                                 StackNyachine->heawp[*(p + 5)]
+                                                 _pow(256,1) * StackNyachine->heawp[*(p + 4)] +
+                                                 _pow(256,2) * StackNyachine->heawp[*(p + 5)]
                                                  ] - 1;
                 else p += 5;
                 break;
