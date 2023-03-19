@@ -31,6 +31,7 @@ enum OptCodes {
     OPT_SUwUB, // ADDR ADDR ADDR
     OPT_AAH_STOPP, // --
     OPT_DEREF, // ADDR ADDR
+    OPT_NOwOP, // --
 };
 
 void ruwun(StackNyachine* StackNyachine, StackNyachine::size_tywp at) {
@@ -59,6 +60,8 @@ void ruwun(StackNyachine* StackNyachine, StackNyachine::size_tywp at) {
             case OPT_DEREF:
                 StackNyachine->heawp[*(p + 1)] = StackNyachine->heawp[StackNyachine->heawp[*(p + 2)]];
                 p += 2;
+                break;
+            case OPT_NOwOP:
                 break;
             default:
 #ifndef STACK_NYACHINE_NO_IO
