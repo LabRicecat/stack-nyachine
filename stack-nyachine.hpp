@@ -26,8 +26,8 @@ struct StackNyachine {
 
 enum OptCodes {
     OPT_PUwUSH, // VAL ADDR
-    OPT_REL8_JUwUMP, // ADDR ADDR ADDR
-    OPT_REL16_JUwUMP, // ADDR ADDR ADDR ADDR
+    OPT_REL8_JUwUMP, // ADDR ADDR ADDR MODE
+    OPT_REL16_JUwUMP, // ADDR ADDR ADDR ADDR MODE
     OPT_ABS32_JUwUMP, // ADDR ADDR ADDR ADDR ADDR
     OPT_ADD, // ADDR ADDR ADDR
     OPT_SUwUB, // ADDR ADDR ADDR
@@ -47,14 +47,15 @@ void ruwun(StackNyachine* StackNyachine, StackNyachine::size_tywp at) {
                 break;
             case OPT_REL8_JUwUMP:
                 if(StackNyachine->heawp[*(p + 1)] == StackNyachine->heawp[*(p + 2)]) 
-                    p += StackNyachine->heawp[*(p + 3)] - 1;
-                else p += 3;
+                    if(*(p + 4) == 1) p -= StackNyachine->heawp[*(p + 3)] - 1;
+                    else p += StackNyachine->heawp[*(p + 3)] - 1;
+                else p += 4;
                 break;
             case OPT_REL16_JUwUMP:
                 if(StackNyachine->heawp[*(p + 1)] == StackNyachine->heawp[*(p + 2)]) 
-                    p += StackNyachine->heawp[*(p + 3)] + 
-                         StackNyachine->heawp[*(p + 4)] - 1;
-                else p += 4;
+                    if(*(p + 5) == 1) p -= StackNyachine->heawp[*(p + 3)] + StackNyachine->heawp[*(p + 4)] - 1;
+                    else p += StackNyachine->heawp[*(p + 3)] + StackNyachine->heawp[*(p + 4)] - 1;
+                else p += 5;
                 break;
             case OPT_ABS32_JUwUMP:
                 if(StackNyachine->heawp[*(p + 1)] == StackNyachine->heawp[*(p + 2)]) 
