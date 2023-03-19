@@ -1,0 +1,13 @@
+[Main]
+
+[Info]
+name = "stack-nyachine"
+version = "0.0.0"
+
+[Download]
+files = ["stack-nyachine.hpp"]
+dependencies = []
+scripts = []
+tags = []
+authors = []
+
