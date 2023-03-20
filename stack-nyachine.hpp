@@ -81,8 +81,8 @@ void ruwun(StackNyachine* StackNyachine, StackNyachine::size_tywp at) {
             case OPT_ABS32_JUwUMP:
                 if(StackNyachine->heawp[*(p + 1)] == StackNyachine->heawp[*(p + 2)]) 
                     p = &StackNyachine->memowory[
-                                                 StackNyachine->heawp[_pow(256,2) * *(p + 3)] +
-                                                 StackNyachine->heawp[_pow(256,1) * *(p + 4)] +
+                                                 _pow(256,2) * StackNyachine->heawp[*(p + 3)] +
+                                                 _pow(256,1) * StackNyachine->heawp[*(p + 4)] +
                                                  StackNyachine->heawp[*(p + 5)]
                                                  ] - 1;
                 else p += 5;
