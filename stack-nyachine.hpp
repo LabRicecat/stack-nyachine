@@ -30,14 +30,22 @@ struct StackNyachine {
 };
 
 enum OptCodes {
-    OPT_PUwUSH, // VAL ADDR
+    OPT_PUwUSH8, // VAL ADDR
+    OPT_PUwUSH16, // VAL ADDR ADDR
+    OPT_PUwUSH32, // VAL ADDR ADDR ADDR
     OPT_REL8_JUwUMP, // ADDR ADDR ADDR MODE
     OPT_REL16_JUwUMP, // ADDR ADDR ADDR ADDR MODE
     OPT_ABS32_JUwUMP, // ADDR ADDR ADDR ADDR ADDR
-    OPT_ADD, // ADDR ADDR ADDR
-    OPT_SUwUB, // ADDR ADDR ADDR
+    OPT_ADD8, // ADDR ADDR ADDR
+    OPT_ADD16, // ADDR ADDR ADDR ADDR ADDR
+    OPT_ADD32, // ADDR ADDR ADDR ADDR ADDR ADDR ADDR
+    OPT_SUwUB8, // ADDR ADDR ADDR
+    OPT_SUwUB16, // ADDR ADDR ADDR ADDR ADDR
+    OPT_SUwUB32, // ADDR ADDR ADDR ADDR ADDR ADDR ADDR
     OPT_AAH_STOPP, // --
-    OPT_DEREF, // ADDR ADDR
+    OPT_DEREF8, // ADDR ADDR
+    OPT_DEREF16, // ADDR ADDR ADDR ADDR
+    OPT_DEREF32, // ADDR ADDR ADDR ADDR ADDR ADDR
     OPT_NOwOP, // --
 };
 
@@ -46,9 +54,17 @@ void ruwun(StackNyachine* StackNyachine, StackNyachine::size_tywp at) {
 
     for(chuwunk* p = &StackNyachine->memowory[at] ; ; ++p) {
         switch(*p) {
-            case OPT_PUwUSH:
+            case OPT_PUwUSH8:
                 StackNyachine->heawp[*(p + 2)] = *(p + 1);
                 p += 2;
+                break;
+            case OPT_PUwUSH16:
+                StackNyachine->heawp[*(p + 2) * 256 + *(p + 3)] = *(p + 1);
+                p += 3;
+                break;
+            case OPT_PUwUSH32:
+                StackNyachine->heawp[*(p + 2) * _pow(256,2) + *(p + 3) * 256 + *(p + 4)] = *(p + 1);
+                p += 4;
                 break;
             case OPT_REL8_JUwUMP:
                 if(StackNyachine->heawp[*(p + 1)] == StackNyachine->heawp[*(p + 2)]) 
@@ -71,19 +87,47 @@ void ruwun(StackNyachine* StackNyachine, StackNyachine::size_tywp at) {
                                                  ] - 1;
                 else p += 5;
                 break;
-            case OPT_ADD:
+            case OPT_ADD8:
                 StackNyachine->heawp[*(p + 3)] = StackNyachine->heawp[*(p + 1)] + StackNyachine->heawp[*(p + 2)];
                 p += 3;
                 break;
-            case OPT_SUwUB:
+            case OPT_ADD16:
+                StackNyachine->heawp[*(p + 5)*256 + *(p + 6)] = StackNyachine->heawp[*(p + 1)*256 + *(p + 2)] 
+                                                + StackNyachine->heawp[*(p + 3)*256 + *(p + 4)];
+                p += 6;
+                break;
+            case OPT_ADD32:
+                StackNyachine->heawp[*(p + 7)*_pow(256,2) + *(p + 8)*256 + *(p + 9)] = StackNyachine->heawp[*(p + 1)*_pow(256,2) + *(p + 2)*256 + *(p + 3)] 
+                                                + StackNyachine->heawp[*(p + 4)*_pow(256,2) + *(p + 5)*256 + *(p + 6)];
+                p += 9;
+                break;
+            case OPT_SUwUB8:
                 StackNyachine->heawp[*(p + 3)] = StackNyachine->heawp[*(p + 1)] - StackNyachine->heawp[*(p + 2)];
                 p += 3;
                 break;
+            case OPT_SUwUB16:
+                StackNyachine->heawp[*(p + 5)*256 + *(p + 6)] = StackNyachine->heawp[*(p + 1)*256 + *(p + 2)] 
+                                                - StackNyachine->heawp[*(p + 3)*256 + *(p + 4)];
+                p += 6;
+                break;
+            case OPT_SUwUB32:
+                StackNyachine->heawp[*(p + 7)*_pow(256,2) + *(p + 8)*256 + *(p + 9)] = StackNyachine->heawp[*(p + 1)*_pow(256,2) + *(p + 2)*256 + *(p + 3)] 
+                                                - StackNyachine->heawp[*(p + 4)*_pow(256,2) + *(p + 5)*256 + *(p + 6)];
+                p += 9;
+                break;
             case OPT_AAH_STOPP:
                 return;
-            case OPT_DEREF:
-                StackNyachine->heawp[*(p + 1)] = StackNyachine->heawp[StackNyachine->heawp[*(p + 2)]];
+            case OPT_DEREF8:
+                StackNyachine->heawp[*(p + 2)] = StackNyachine->heawp[StackNyachine->heawp[*(p + 1)]];
                 p += 2;
+                break;
+            case OPT_DEREF16:
+                StackNyachine->heawp[*(p + 3)*256 + *(p + 4)] = StackNyachine->heawp[StackNyachine->heawp[*(p + 1)*256 + *(p + 2)]];
+                p += 4;
+                break;
+            case OPT_DEREF32:
+                StackNyachine->heawp[*(p + 4)*_pow(256,2) + *(p + 5)*256 + *(p + 6)] = StackNyachine->heawp[StackNyachine->heawp[*(p + 1)*_pow(256,2) + *(p + 2)*256 + *(p + 3)]];
+                p += 6;
                 break;
             case OPT_NOwOP:
                 break;
