@@ -13,7 +13,7 @@ consteval long long _pow(long long _x, long long _y) {
     return (_pow(_x,_y-1) * _x);
 }
 
-using chuwunk = uint8_t;
+using chuwunk = uint64_t;
 
 struct StackNyachine {
     using size_tywp = unsigned long long;
@@ -29,115 +29,110 @@ struct StackNyachine {
     }
 };
 
-enum OptCodes {
-    OPT_PUwUSH8, // VAL ADDR
-    OPT_PUwUSH16, // VAL ADDR ADDR
-    OPT_PUwUSH32, // VAL ADDR ADDR ADDR
-    OPT_REL8_JUwUMP, // ADDR ADDR ADDR MODE
-    OPT_REL16_JUwUMP, // ADDR ADDR ADDR ADDR MODE
-    OPT_ABS32_JUwUMP, // ADDR ADDR ADDR ADDR ADDR
-    OPT_ADD8, // ADDR ADDR ADDR
-    OPT_ADD16, // ADDR ADDR ADDR ADDR ADDR
-    OPT_ADD32, // ADDR ADDR ADDR ADDR ADDR ADDR ADDR
-    OPT_SUwUB8, // ADDR ADDR ADDR
-    OPT_SUwUB16, // ADDR ADDR ADDR ADDR ADDR
-    OPT_SUwUB32, // ADDR ADDR ADDR ADDR ADDR ADDR ADDR
+enum OWOptCodes {
+    OPT_PUwUSH, // VAL ADDR
+    OPT_JUwUMP, // ADDR ADDR ADDR
+    OPT_ADD, // ADDR ADDR ADDR
+    OPT_SUwUB, // ADDR ADDR ADDR
     OPT_AAH_STOPP, // --
-    OPT_DEREF8, // ADDR ADDR
-    OPT_DEREF16, // ADDR ADDR ADDR ADDR
-    OPT_DEREF32, // ADDR ADDR ADDR ADDR ADDR ADDR
+    OPT_DEREF, // ADDR ADDR
+    OPT_MOwOV, // ADDR ADDR
+    OPT_COwOPY, // ADDR ADDR
     OPT_NOwOP, // --
+
+    // STAWK-OwOPS
+    OPT_PUwUSHS, // ADDR
+    OPT_POwOPS,
+    OPT_TOwOPS, // ADDR
+    OPT_SSIZE, // ADDR
+    OPT_PUwUTS, // ADDR
 };
 
-void ruwun(StackNyachine* StackNyachine, StackNyachine::size_tywp at) {
-    if(StackNyachine->memowory_size <= at) return;
+enum NyaSignal {
+    NYASIG_OK,
+    NYASIG_INSTMM, // instruction missmatch
+    NYASIG_SEGF, // segfault
+    NYASIG_SUP, // stack overflow
+    NYASIG_SDOW, // stack underflow
+    NYASIG_SEM, // access to empty stack
+};
+
+const constexpr StackNyachine::size_tywp calc_stawksize(StackNyachine::size_tywp heawp_size) {
+    const constexpr StackNyachine::size_tywp STACK_SIWZE_PART = 6;
+    return heawp_size / STACK_SIWZE_PART;
+}
+const constexpr StackNyachine::size_tywp calc_stawkbegin(StackNyachine::size_tywp heawp_size) {
+    return heawp_size - calc_stawksize(heawp_size);
+}
+
+
+NyaSignal ruwun(StackNyachine* StackNyachine, StackNyachine::size_tywp at) {
+    StackNyachine::size_tywp stack_ptr = calc_stawkbegin(StackNyachine->heawp_size);
 
     for(chuwunk* p = &StackNyachine->memowory[at] ; ; ++p) {
         switch(*p) {
-            case OPT_PUwUSH8:
+            case OPT_PUwUSH:
                 StackNyachine->heawp[*(p + 2)] = *(p + 1);
                 p += 2;
                 break;
-            case OPT_PUwUSH16:
-                StackNyachine->heawp[*(p + 2) * 256 + *(p + 3)] = *(p + 1);
-                p += 3;
-                break;
-            case OPT_PUwUSH32:
-                StackNyachine->heawp[*(p + 2) * _pow(256,2) + *(p + 3) * 256 + *(p + 4)] = *(p + 1);
-                p += 4;
-                break;
-            case OPT_REL8_JUwUMP:
+            case OPT_JUwUMP:
                 if(StackNyachine->heawp[*(p + 1)] == StackNyachine->heawp[*(p + 2)]) 
-                    if(*(p + 4) == 1) p -= StackNyachine->heawp[*(p + 3)] - 1;
-                    else p += StackNyachine->heawp[*(p + 3)] - 1;
-                else p += 4;
+                    p = &StackNyachine->memowory[StackNyachine->heawp[*(p + 3)] - 1];
+                else p += 3;
                 break;
-            case OPT_REL16_JUwUMP:
-                if(StackNyachine->heawp[*(p + 1)] == StackNyachine->heawp[*(p + 2)]) 
-                    if(*(p + 5) == 1) p -= StackNyachine->heawp[_pow(256,1) * *(p + 3)] + StackNyachine->heawp[*(p + 4)] - 1;
-                    else p += StackNyachine->heawp[_pow(256,1) * *(p + 3)] + StackNyachine->heawp[*(p + 4)] - 1;
-                else p += 5;
-                break;
-            case OPT_ABS32_JUwUMP:
-                if(StackNyachine->heawp[*(p + 1)] == StackNyachine->heawp[*(p + 2)]) 
-                    p = &StackNyachine->memowory[
-                                                 _pow(256,2) * StackNyachine->heawp[*(p + 3)] +
-                                                 _pow(256,1) * StackNyachine->heawp[*(p + 4)] +
-                                                 StackNyachine->heawp[*(p + 5)]
-                                                 ] - 1;
-                else p += 5;
-                break;
-            case OPT_ADD8:
+            case OPT_ADD:
                 StackNyachine->heawp[*(p + 3)] = StackNyachine->heawp[*(p + 1)] + StackNyachine->heawp[*(p + 2)];
                 p += 3;
                 break;
-            case OPT_ADD16:
-                StackNyachine->heawp[*(p + 5)*256 + *(p + 6)] = StackNyachine->heawp[*(p + 1)*256 + *(p + 2)] 
-                                                + StackNyachine->heawp[*(p + 3)*256 + *(p + 4)];
-                p += 6;
-                break;
-            case OPT_ADD32:
-                StackNyachine->heawp[*(p + 7)*_pow(256,2) + *(p + 8)*256 + *(p + 9)] = StackNyachine->heawp[*(p + 1)*_pow(256,2) + *(p + 2)*256 + *(p + 3)] 
-                                                + StackNyachine->heawp[*(p + 4)*_pow(256,2) + *(p + 5)*256 + *(p + 6)];
-                p += 9;
-                break;
-            case OPT_SUwUB8:
+            case OPT_SUwUB:
                 StackNyachine->heawp[*(p + 3)] = StackNyachine->heawp[*(p + 1)] - StackNyachine->heawp[*(p + 2)];
                 p += 3;
                 break;
-            case OPT_SUwUB16:
-                StackNyachine->heawp[*(p + 5)*256 + *(p + 6)] = StackNyachine->heawp[*(p + 1)*256 + *(p + 2)] 
-                                                - StackNyachine->heawp[*(p + 3)*256 + *(p + 4)];
-                p += 6;
-                break;
-            case OPT_SUwUB32:
-                StackNyachine->heawp[*(p + 7)*_pow(256,2) + *(p + 8)*256 + *(p + 9)] = StackNyachine->heawp[*(p + 1)*_pow(256,2) + *(p + 2)*256 + *(p + 3)] 
-                                                - StackNyachine->heawp[*(p + 4)*_pow(256,2) + *(p + 5)*256 + *(p + 6)];
-                p += 9;
-                break;
             case OPT_AAH_STOPP:
-                return;
-            case OPT_DEREF8:
+                return NYASIG_OK;
+            case OPT_DEREF:
                 StackNyachine->heawp[*(p + 2)] = StackNyachine->heawp[StackNyachine->heawp[*(p + 1)]];
                 p += 2;
                 break;
-            case OPT_DEREF16:
-                StackNyachine->heawp[*(p + 3)*256 + *(p + 4)] = StackNyachine->heawp[StackNyachine->heawp[*(p + 1)*256 + *(p + 2)]];
-                p += 4;
+            case OPT_MOwOV:
+                StackNyachine->heawp[*(p + 1)] = StackNyachine->heawp[StackNyachine->heawp[*(p + 2)]];
+                p += 2;
                 break;
-            case OPT_DEREF32:
-                StackNyachine->heawp[*(p + 4)*_pow(256,2) + *(p + 5)*256 + *(p + 6)] = StackNyachine->heawp[StackNyachine->heawp[*(p + 1)*_pow(256,2) + *(p + 2)*256 + *(p + 3)]];
-                p += 6;
+            case OPT_COwOPY:
+                StackNyachine->heawp[*(p + 1)] = StackNyachine->heawp[*(p + 2)];
+                p += 2;
                 break;
             case OPT_NOwOP:
                 break;
+            case OPT_PUwUSHS:
+                ++stack_ptr;
+                StackNyachine->heawp[stack_ptr] = StackNyachine->heawp[*(p + 1)];
+                p += 1;
+                if(stack_ptr - calc_stawkbegin(StackNyachine->heawp_size) > calc_stawksize(StackNyachine->heawp_size)) return NYASIG_SUP;
+                break;
+            case OPT_POwOPS:
+                if(stack_ptr - calc_stawkbegin(StackNyachine->heawp_size) <= 0) return NYASIG_SDOW;
+                --stack_ptr;
+                break;
+            case OPT_TOwOPS:
+                if(stack_ptr - calc_stawkbegin(StackNyachine->heawp_size) == 0) return NYASIG_SEM;
+                StackNyachine->heawp[*(p + 1)] = StackNyachine->heawp[stack_ptr];
+                p += 1;
+                break;
+            case OPT_SSIZE:
+                StackNyachine->heawp[*(p + 1)] = stack_ptr - calc_stawkbegin(StackNyachine->heawp_size);
+                p += 1;
+                break;
+            case OPT_PUwUTS:
+                if(stack_ptr - calc_stawkbegin(StackNyachine->heawp_size) == 0) return NYASIG_SEM;
+                StackNyachine->heawp[stack_ptr] = StackNyachine->heawp[*(p + 1)];
+                p += 1;
+                break;
             default:
-#ifndef STACK_NYACHINE_NO_IO
-                printf("unrecognised: %d\n", *p);
-#endif
-                return;
+                return NYASIG_INSTMM;
         }
     }
+    return NYASIG_OK;
 }
 
 void assign(StackNyachine* m, chuwunk* mem, StackNyachine::size_tywp mem_size) {
