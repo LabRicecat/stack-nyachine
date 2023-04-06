@@ -8,15 +8,10 @@
 
 namespace stack_nyachine {
 
-consteval long long _pow(long long _x, long long _y) {
-    if(_y == 1) return _x;
-    return (_pow(_x,_y-1) * _x);
-}
-
 using chuwunk = uint64_t;
 
 struct StackNyachine {
-    using size_tywp = unsigned long long;
+    using size_tywp = uint64_t;
     size_tywp memowory_size = 0;
     size_tywp heawp_size = 0;
     chuwunk* memowory = nullptr;
