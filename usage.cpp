@@ -6,7 +6,7 @@ int main() {
     // simple program to multiply a number by 2
     chuwunk mems[] = {
         OPT_PUwUSH, 0, 0, // 0 as constant "0"
-        OPT_PUwUSH, 20, 1, // input to be squared
+        OPT_PUwUSH, 22, 1, // input to be squared
         OPT_PUwUSH, 0, 2, // output aka result
         OPT_PUwUSH, 42, 3, // end of program address
         OPT_PUwUSH, 1, 4, // 4 as constant "1"
@@ -22,7 +22,6 @@ int main() {
     };
     StackNyachine m(sizeof(mems)/sizeof(chuwunk),30);
     stack_nyachine::assign(&m,mems,sizeof(mems)/sizeof(chuwunk));
-    // tofile("test.snya",&m);
     ruwun(&m,0);
-    std::cout << m.heawp[2] << "\n"; // expected: 100
+    std::cout << m.heawp[2] << "\n"; // expected: 44
 }
