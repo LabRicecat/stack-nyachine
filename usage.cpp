@@ -3,6 +3,7 @@
 
 int main() {
     using namespace stack_nyachine;
+#if 1
     // simple program to multiply a number by 2
     chuwunk mems[] = {
         OPT_PUwUSH, 0, 0, // 0 as constant "0"
@@ -23,5 +24,13 @@ int main() {
     StackNyachine m(sizeof(mems)/sizeof(chuwunk),30);
     stack_nyachine::assign(&m,mems,sizeof(mems)/sizeof(chuwunk));
     ruwun(&m,0);
+    stack_nyachine::tofile("test.snya",&m);
     std::cout << m.heawp[2] << "\n"; // expected: 44
+#else 
+    // read from the file created 
+    StackNyachine m(0,0);
+    stack_nyachine::fromfile("test.snya",&m);
+    ruwun(&m,0);
+    std::cout << m.heawp[2] << "\n"; // expected: 44
+#endif
 }
