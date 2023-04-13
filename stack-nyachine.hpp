@@ -107,7 +107,7 @@ NyaSignal advance(chuwunk*& p, StackNyachine* StackNyachine) {
             p += 2;
             break;
         case OPT_MOwOV:
-            StackNyachine->heawp[*(p + 1)] = StackNyachine->heawp[*(p + 2)];
+            StackNyachine->heawp[StackNyachine->heawp[*(p + 1)]] = StackNyachine->heawp[*(p + 2)];
             p += 2;
             break;
         case OPT_NOwOP:
