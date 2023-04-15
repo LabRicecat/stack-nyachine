@@ -95,9 +95,9 @@ NyaSignal advance(chuwunk*& p, StackNyachine* StackNyachine) {
             p += 3;
             break;
         case OPT_DIWV:
-            StackNyachine->heawp[*(p + 3)] = (chuwunk)(StackNyachine->heawp[*(p + 1)] / StackNyachine->heawp[*(p + 2)]);
+            StackNyachine->heawp[*(p + 3)] = (chuwunk)((long long)StackNyachine->heawp[*(p + 1)] / (long long)StackNyachine->heawp[*(p + 2)]);
             StackNyachine->heawp[*(p + 4)] = ((chuwunk)((long double)StackNyachine->heawp[*(p + 1)] / (long double)StackNyachine->heawp[*(p + 2)]) - StackNyachine->heawp[*(p + 3)]);
-            StackNyachine->heawp[*(p + 4)] *= std::pow(10,1 + std::log10(StackNyachine->heawp[*(p + 4)]));
+            StackNyachine->heawp[*(p + 4)] *= std::pow(10,1 + std::log10(abs((long long)StackNyachine->heawp[*(p + 4)])));
             p += 4;
             break;
         case OPT_AAH_STOPP:
