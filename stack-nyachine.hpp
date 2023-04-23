@@ -15,10 +15,10 @@ constexpr long long _pow(long long _x, long long _y) {
     return (_pow(_x,_y-1) * _x);
 }
 
-using chuwunk = uint64_t;
+using chuwunk = int64_t;
 
 struct StackNyachine {
-    using size_tywp = uint64_t;
+    using size_tywp = int64_t;
     size_tywp memowory_size = 0;
     size_tywp heawp_size = 0;
     chuwunk* memowory = nullptr;
@@ -83,27 +83,27 @@ NyaSignal advance(chuwunk*& p, StackNyachine* StackNyachine) {
             else p += 3;
             break;
         case OPT_ADD:
-            StackNyachine->heawp[*(p + 3)] = StackNyachine->heawp[*(p + 1)] + StackNyachine->heawp[*(p + 2)];
+            StackNyachine->heawp[StackNyachine->heawp[*(p + 3)]] = StackNyachine->heawp[*(p + 1)] + StackNyachine->heawp[*(p + 2)];
             p += 3;
             break;
         case OPT_SUwUB:
-            StackNyachine->heawp[*(p + 3)] = StackNyachine->heawp[*(p + 1)] - StackNyachine->heawp[*(p + 2)];
+            StackNyachine->heawp[StackNyachine->heawp[*(p + 3)]] = StackNyachine->heawp[*(p + 1)] - StackNyachine->heawp[*(p + 2)];
             p += 3;
             break;
         case OPT_MUwUL:
-            StackNyachine->heawp[*(p + 3)] = StackNyachine->heawp[*(p + 1)] * StackNyachine->heawp[*(p + 2)];
+            StackNyachine->heawp[StackNyachine->heawp[*(p + 3)]] = StackNyachine->heawp[*(p + 1)] * StackNyachine->heawp[*(p + 2)];
             p += 3;
             break;
         case OPT_DIWV:
-            StackNyachine->heawp[*(p + 3)] = (chuwunk)((long long)StackNyachine->heawp[*(p + 1)] / (long long)StackNyachine->heawp[*(p + 2)]);
-            StackNyachine->heawp[*(p + 4)] = ((chuwunk)((long double)StackNyachine->heawp[*(p + 1)] / (long double)StackNyachine->heawp[*(p + 2)]) - StackNyachine->heawp[*(p + 3)]);
-            StackNyachine->heawp[*(p + 4)] *= std::pow(10,1 + std::log10(abs((long long)StackNyachine->heawp[*(p + 4)])));
+            StackNyachine->heawp[StackNyachine->heawp[*(p + 3)]] = (chuwunk)((long long)StackNyachine->heawp[*(p + 1)] / (long long)StackNyachine->heawp[*(p + 2)]);
+            StackNyachine->heawp[StackNyachine->heawp[*(p + 4)]] = ((chuwunk)((long double)StackNyachine->heawp[*(p + 1)] / (long double)StackNyachine->heawp[*(p + 2)]) - StackNyachine->heawp[StackNyachine->heawp[*(p + 3)]]);
+            StackNyachine->heawp[StackNyachine->heawp[*(p + 4)]] *= std::pow(10,1 + std::log10(abs((long long)StackNyachine->heawp[StackNyachine->heawp[*(p + 4)]])));
             p += 4;
             break;
         case OPT_AAH_STOPP:
             return NYASIG_EXIT;
         case OPT_DEREF:
-            StackNyachine->heawp[*(p + 2)] = StackNyachine->heawp[StackNyachine->heawp[*(p + 1)]];
+            StackNyachine->heawp[StackNyachine->heawp[*(p + 2)]] = StackNyachine->heawp[StackNyachine->heawp[*(p + 1)]];
             p += 2;
             break;
         case OPT_MOwOV:
