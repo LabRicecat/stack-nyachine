@@ -172,24 +172,24 @@ void assign(StackNyachine* m, chuwunk* mem, StackNyachine::size_tywp mem_size) {
 #ifndef STACK_NYACHINE_NO_IO
 void tofile(const char* name, StackNyachine* m) {
     FILE* f = fopen(name,"w");
-    for(size_t i = 0; i < m->memowory_size; ++i)
-        fwrite((char*)&m->memowory[i],8,1,f);
+    for(size_t i = 0; i < m->memowory_size+1; ++i)
+        fwrite((char*)&m->memowory[i],sizeof(stack_nyachine::chuwunk),1,f);
     fclose(f);
 }
 
 void fromfile(const char* name, StackNyachine* m) {
     FILE* f = fopen(name,"r");
     fseek(f, 0, SEEK_END);
-    long size = ftell(f);
+    long size = ftell(f) / sizeof(stack_nyachine::chuwunk);
     fseek(f, 0, SEEK_SET);
 
     if(m->memowory != nullptr)
         delete m->memowory;
-    m->memowory = new chuwunk[size / 8];
+    m->memowory = new chuwunk[size];
 
-    m->memowory_size = size / 8;
-    for(size_t i = 0; i < size / 8; ++i)
-        fread((void*)&m->memowory[i],8,1,f);
+    m->memowory_size = size;
+    for(size_t i = 0; i < size; ++i)
+        fread((void*)&m->memowory[i],sizeof(stack_nyachine::chuwunk),1,f);
     fclose(f);
 }
 #endif
